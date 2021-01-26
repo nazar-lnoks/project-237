@@ -15,7 +15,7 @@ class ProfileUser(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify('user-' + self.name + self.id)
+            self.slug = slugify('user-' + self.name + str(self.id))
         super().save(*args, **kwargs)
 
 
