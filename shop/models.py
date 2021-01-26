@@ -42,7 +42,7 @@ class Product(models.Model):
         return "{}".format(self.model)
 
 
-class LaptopProduct(Product):
+class Laptop(Product):
     diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')

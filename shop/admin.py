@@ -66,7 +66,7 @@ class SmartwatchAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Category)
 
-admin.site.register(LaptopProduct, LaptopAdmin)
+admin.site.register(Laptop, LaptopAdmin)
 admin.site.register(Monitor, MonitorAdmin)
 admin.site.register(PersonalComputer, PersonalComputerAdmin)
 admin.site.register(Headphones, HeadphonesAdmin)
