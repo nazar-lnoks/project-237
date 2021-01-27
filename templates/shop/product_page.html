@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Sign up {% endblock %}
+
+{% block content %}
+    <h1>Product Page</h1>
+
+    <h1> {{product.model}} </h1>
+    <h1> {{product.description}} </h1>
+    <h1> {{product.price}} </h1>
+{% endblock %}

@@ -43,7 +43,7 @@ class MouseAdmin(admin.ModelAdmin):
             return ModelChoiceField(Category.objects.filter(slug='mice'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-class SmarphoneAdmin(admin.ModelAdmin):
+class SmartphoneAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
             return ModelChoiceField(Category.objects.filter(slug='smarphones'))
@@ -72,7 +72,7 @@ admin.site.register(PersonalComputer, PersonalComputerAdmin)
 admin.site.register(Headphones, HeadphonesAdmin)
 admin.site.register(Keyboard, KeyboardAdmin)
 admin.site.register(Mouse, MouseAdmin)
-admin.site.register(Smarphone, SmarphoneAdmin)
+admin.site.register(Smartphone, SmartphoneAdmin)
 admin.site.register(Camera, CameraAdmin)
 admin.site.register(Smartwatch, SmartwatchAdmin)
 
