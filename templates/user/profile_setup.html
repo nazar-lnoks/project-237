@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Profile setup {% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+    <div class="row content-center">
+        <div class="col-md-4 mt-5">
+            <h2 class="auth-title">Profile setup</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small style="color: grey">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                    </p>
+                {% endfor %}
+                <div class="btn-block">
+                    <button type="submit" class="btn btn-primary auth-btn">Sign up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

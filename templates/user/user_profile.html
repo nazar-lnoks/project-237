@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Profile {% endblock %}
+
+{% block content %}
+    <div class="container mb-5">
+        <div class="row content-center">
+            <h1>Name {{user.name}}</h1>
+            <h1>surname {{user.surname}}</h1>
+            <h1>middle {{user.middlename}}</h1>
+            <h1>Date birth {{user.birth_date}}</h1>
+        </div>
+    </div>
+{% endblock %}
