@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Sign up {% endblock %}
+
+{% block content %}
+
+    <h1>Main</h1>
+
+    <h1>Categories:</h1>
+    <ul>
+
+    {% for category in categories %}
+
+        <li><a href="{% url 'getCategoryCatalog_url' slug=category.slug %}">{{category.name}}</a></li>
+
+    {% endfor %}
+
+    </ul>
+    <a href="{% url 'getCart_url' %}" class="btn btn-primary">Cart</a>
+
+{% endblock %}
+
+
+<style>
+    textarea{
+        res    
+    }
+</style>

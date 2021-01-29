@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Sign up {% endblock %}
+
+{% block content %}
+    <h1>Category page</h1>
+
+    <h1>Name - {{ category.name }}</h1>
+
+    {% for products in qs_products %}
+        {% for product in products %}
+
+          <a href="{% url 'getProductDetails_url' slug=product.slug %}">{{ product.model }}</a>
+
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
