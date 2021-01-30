@@ -12,7 +12,7 @@ class ProfileUser(models.Model):
     surname = models.CharField(max_length=60, db_index=True)
     middlename = models.CharField(max_length=60, db_index=True)
     birth_date = models.DateField(max_length=8)
-    image = models.ImageField(upload_to="avatars/", blank=True)
+    image = models.ImageField(upload_to="avatars", blank=True)
     phone_number = PhoneNumberField(blank=True, help_text="Contact phone number")
 
     def save(self, *args, **kwargs):

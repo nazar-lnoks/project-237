@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Sign up {% endblock %}
+
+{% block content %}
+    <h1>Product Page</h1>
+
+    <h1> {{ product.model }} </h1>
+    <h1> {{ product.description }} </h1>
+    <h1> {{ product.price }} </h1>
+
+    <a href="{% url 'addProductToCart_url' slug=product.slug %}" class="btn btn-primary">Add to cart</a>
+    <a href="{% url 'orderProduct_url' slug=product.slug %}" class="btn btn-primary">Buy</a>
+{% endblock %}
