@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Sign up {% endblock %}
+
+{% block content %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          {% if request.user.is_authenticated %}
+            <!-- Avatar -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle d-flex align-items-center"
+                href="#"
+                id="navbarDropdownMenuLink"
+                role="button"
+                data-mdb-toggle="dropdown"
+                aria-expanded="false"
+              >
+              {% if user.image %}
+                <img
+                  src="{{user.image.url}}"
+                  class="rounded-circle"
+                  height="22"
+                  alt=""
+                  loading="lazy"
+                />
+              {% else %}
+                <h1>Not image</h1>
+              {% endif %}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="#">My profile</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><a class="dropdown-item" href="#">Logout</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'logout_url' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a href="{% url 'login_url' %}">Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+  </nav>
+{% endblock %}

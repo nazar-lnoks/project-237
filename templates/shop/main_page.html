@@ -4,6 +4,7 @@
 {% block title %} {{block.super}} - Sign up {% endblock %}
 
 {% block content %}
+    {% include 'user/interface_user.html' with user=user%}
 
     <h1>Main</h1>
 

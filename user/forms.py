@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -23,6 +24,26 @@ class SignUpForm(UserCreationForm):
         widgets = {
             'email':forms.EmailInput(attrs={'class': 'form-control'}),
         }
+
+class LogInForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].required = True
+        self.fields['password'].required = True
+        self.fields['username'] = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), label="Email")
+        self.fields['password'] = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label="Password")
+    
+    def clean(self):
+        email = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=email, password=password)
+        if not user or not user.is_active:
+            raise forms.ValidationError("Sorry, that login was invalid. Please try again.")
+        return self.cleaned_data
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
 
 class SetupProfileForm(forms.ModelForm):
     phone_number = forms.RegexField(widget=forms.TextInput(
