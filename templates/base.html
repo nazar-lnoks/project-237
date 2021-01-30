@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -30,27 +30,27 @@
     <title>
         {% block title %} #techyRoom {% endblock %}
     </title>
-</head>
-<body>
+  </head>
+  <body>
 
-    {% block content %}
-    {% endblock %}
+      {% block content %}
+      {% endblock %}
 
-    <!-- Footer -->
-    <footer class="bg-light text-center text-lg-start">
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-          © 2020 Copyright:
-          <a class="text-dark" href="https://mdbootstrap.com/">TechyRoom</a>
-        </div>
+      <!-- Footer -->
+      <footer class="bg-light text-center text-lg-start">
+          <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+            © 2020 Copyright:
+            <a class="text-dark" href="{% url 'main_page_url' %}">TechyRoom</a>
+          </div>
       </footer>
-    <!-- MDB -->
-    <script
-    type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
-    ></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js" 
-    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
-    crossorigin="anonymous"></script>
-    <script src="{% static 'js/dropicon.js' %}"></script>
-</body>
+      <!-- MDB -->
+      <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+      ></script>
+      <script src="https://code.jquery.com/jquery-3.5.1.js" 
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
+      crossorigin="anonymous"></script>
+      <script src="{% static 'js/dropicon.js' %}"></script>
+  </body>
 </html>

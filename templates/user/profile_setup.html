@@ -8,7 +8,7 @@
     <div class="row content-center">
         <div class="col-md-4 mt-5">
             <h2 class="auth-title">Profile setup</h2>
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for field in form %}
                     <p>

@@ -8,10 +8,30 @@
 
     <div class="container mb-5">
         <div class="row content-center">
-            <h1>Name {{user.name}}</h1>
-            <h1>surname {{user.surname}}</h1>
-            <h1>middle {{user.middlename}}</h1>
-            <h1>Date birth {{user.birth_date}}</h1>
+            <div class="col-md-6 mt-5">
+                <h2 class="auth-title">Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <p>
+                        {{ field.label_tag }}<br>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                        </p>
+                    {% endfor %}
+                    {% for message in messages %}
+                        <p style="color: grey">{{ message }}</p>
+                    {% endfor %}
+                    <div class="btn-block">
+                        <button type="submit" class="btn btn-primary auth-btn">Edit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

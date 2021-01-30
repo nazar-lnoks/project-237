@@ -5,7 +5,7 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.mainPage),
+    path('', views.mainPage, name="main_page_url"),
     path('categories/<str:slug>/', views.getCategoryCatalog, name='getCategoryCatalog_url'),
     path('products/<str:slug>/', views.getProductDetails, name='getProductDetails_url'),
     path('products/<str:slug>', views.addToCart, name='addProductToCart_url'),

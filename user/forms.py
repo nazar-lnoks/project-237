@@ -30,7 +30,7 @@ class LogInForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].required = True
         self.fields['password'].required = True
-        self.fields['username'] = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), label="Email")
+        self.fields['username'] = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), label="Email address")
         self.fields['password'] = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label="Password")
     
     def clean(self):

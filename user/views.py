@@ -1,5 +1,5 @@
 from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,7 +11,7 @@ from time import time
 from .forms import SignUpForm, SetupProfileForm, LogInForm
 from .models import ProfileUser
 
-def signup(request):
+def signUp(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -43,9 +43,6 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/account/profile')
-            else:
-                print(messages.error(request,'username or password not correct'))
-                # return HttpResponseRedirect('/account/login')
         return render(request, 'user/login.html', {'form':form})
 
 def logoutUser(request):
@@ -53,9 +50,9 @@ def logoutUser(request):
     return HttpResponseRedirect('/')
 
 @login_required()
-def setup_profile(request):
+def setupProfile(request):
     if request.method == 'POST':
-        form = SetupProfileForm(request.POST)
+        form = SetupProfileForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             new_form = form.save(commit=False)
             new_form.user = request.user
@@ -66,9 +63,18 @@ def setup_profile(request):
         form = SetupProfileForm()
     return render(request, 'user/profile_setup.html', {'form':form})
 
-def user_profile(request):
-    if request.user:
-        user = ProfileUser.objects.get(user=request.user)
+@login_required()
+def userProfile(request):
+    user = request.user
+    account = get_object_or_404(ProfileUser, user=user)
+
+    if request.method == "POST":
+        form = SetupProfileForm(data=request.POST, files=request.FILES, instance=account)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Form submission successful')
+            return HttpResponseRedirect('/account/profile')
     else:
-        user = None
-    return render(request, 'user/user_profile.html', {'user':user})
+        form = SetupProfileForm(instance=account)
+    return render(request, 'user/user_profile.html', {'form':form, 'user':account})
+    
