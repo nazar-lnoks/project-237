@@ -42,7 +42,7 @@ class LoginView(View):
             user = authenticate(username=email, password=password)
             if user is not None:
                 login(request, user)
-                return HttpResponseRedirect('/account/profile')
+                return HttpResponseRedirect('/')
         return render(request, 'user/login.html', {'form':form})
 
 def logoutUser(request):
@@ -58,7 +58,7 @@ def setupProfile(request):
             new_form.user = request.user
             new_form.save()
 
-            return HttpResponseRedirect('/account/profile')
+            return HttpResponseRedirect('/')
     else:
         form = SetupProfileForm()
     return render(request, 'user/profile_setup.html', {'form':form})

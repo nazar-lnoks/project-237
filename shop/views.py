@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect
 from django.contrib.contenttypes.models import ContentType
 from .forms import OrderForm
 from . import models
+
+from user.models import ProfileUser
 
 from django.apps import apps
 
@@ -64,17 +66,22 @@ def getCartProductsByUserId(id):
 
     return None
 
-
-# render main page
 def mainPage(request):
-    # get all product categories
-    categories = models.Category.objects.all()
-    context={ 'categories': categories }
 
-    if DEBUG: print("mainPage() context: {}: ".format(context))
+    topProducts = getTopProducts()
+    categories = models.Category.objects.all()
+
+    empty = False
+    if len(categories) == 0:
+        empty = True
+    
+    if request.user.is_anonymous:
+        context={'categories':categories, 'empty':empty, 'topProducts':topProducts}
+    else:
+        account = get_object_or_404(ProfileUser, user=request.user)
+        context={'categories':categories, 'empty':empty, 'topProducts':topProducts, 'account':account}
 
     return render(request, 'shop/main_page.html', context)
-
 
 # render catalog for specified category 
 def getCategoryCatalog(request, slug):
@@ -359,17 +366,6 @@ def getTopProducts():
         topProducts.append(getProductByRate(maxAvarageRate, qs[0].category))
             
     return topProducts
-
-
-def mainPage(request):
-
-    topProducts = getTopProducts()
-    categories = models.Category.objects.all()
-
-    empty = False
-    if len(categories) == 0: empty = True
-
-    return render(request, 'shop/main_page.html', context={'categories':categories, 'empty':empty, 'topProducts':topProducts})
 
 def getCategoryCatalog(request, slug):
 
