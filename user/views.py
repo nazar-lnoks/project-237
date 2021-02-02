@@ -10,6 +10,7 @@ from time import time
 
 from .forms import SignUpForm, SetupProfileForm, LogInForm
 from .models import ProfileUser
+from shop.models import Order
 
 def signUp(request):
     if request.method == 'POST':
@@ -77,4 +78,23 @@ def userProfile(request):
     else:
         form = SetupProfileForm(instance=account)
     return render(request, 'user/user_profile.html', {'form':form, 'user':account})
-    
+
+@login_required()
+def orderHistory(request):
+    user = request.user
+    account = get_object_or_404(ProfileUser, user=user)
+
+    objects = []
+    orders = Order.objects.filter(user=user)
+
+    for i in orders:
+        model = i.contentType.model_class()
+        product = model.objects.get(id=i.objectId)
+
+        order = {
+            'date': i.date_buy,
+            'product': product
+        }
+        objects.append(order)
+    return render(request, 'user/order_history.html', {'user':account, 'orders':objects})
+

@@ -25,7 +25,7 @@ class Product(models.Model):
     model = models.CharField(max_length=45, verbose_name='Model')
     slug = models.SlugField(unique=True, default='null')
     description = models.CharField(max_length=1024, verbose_name='Description')
-    image = models.ImageField(verbose_name='Image')
+    image = models.ImageField(upload_to="products", verbose_name='Image')
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Price')
     averageRate = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Average rate', default=0.0)
     availability = models.BooleanField(verbose_name='Availability')
@@ -131,7 +131,7 @@ class Smartwatch(Product):
     material = models.CharField(max_length=32, verbose_name='Material')
 
     def __str__(self):
-        return "{} {}".format(self.moistureProtection, self.material)
+        return "Smartwatch {}".format(self.id)
 
 
 class CartProduct(models.Model):
@@ -154,12 +154,16 @@ class Order(models.Model):
     contentType = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     objectId = models.PositiveIntegerField()
     contentObject = GenericForeignKey('contentType', 'objectId')
+    date_buy = models.DateField(auto_now_add=True)
 
     deliveryAddress = models.CharField(max_length=255, verbose_name='Delivery address')
     payment = models.CharField(max_length=255, verbose_name='Payment')
 
     def __str__(self):
-        return "{}".format(self.payment)
+        return "Order {}".format(self.id)
+
+    class Meta:
+        ordering = ['-id']
 
 class Feedback(models.Model):
     name = models.CharField(max_length=45, verbose_name='User name')
@@ -173,7 +177,6 @@ class Feedback(models.Model):
 
     def __str__(self):
         return "{}".format(self.name)
-
 
 
 

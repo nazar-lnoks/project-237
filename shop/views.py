@@ -2,10 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect
 from django.contrib.contenttypes.models import ContentType
-from .forms import OrderForm
+from .forms import *
 from . import models
-
 from user.models import ProfileUser
+from django.db.models import Avg, Max
 
 from django.apps import apps
 
@@ -62,7 +62,23 @@ def getCartProductsByUserId(id):
 
         return products
 
-    if DEBUG: print("None")
+    if DEBUG: print("getCartProductsByUserId() return None")
+
+    return None
+
+def getCartProductByUserIdBySlug(id, slug):
+    # get product object by slug
+    product = getProductBySlug(slug)
+    # get user object by id
+    user = models.User.objects.get(id=id) 
+
+    contentType = ContentType.objects.get(app_label="shop", model=product._meta.model_name)
+
+    product = models.CartProduct.objects.filter(user=user, contentType=contentType, objectId=product.id)
+    if len(product) > 0:
+        return product[0]
+
+    if DEBUG: print("getCartProductsByUserId() return None")
 
     return None
 
@@ -82,6 +98,7 @@ def mainPage(request):
         context={'categories':categories, 'empty':empty, 'topProducts':topProducts, 'account':account}
 
     return render(request, 'shop/main_page.html', context)
+
 
 # render catalog for specified category 
 def getCategoryCatalog(request, slug):
@@ -133,29 +150,34 @@ def getProductDetails(request, slug):
 
 # add product with specified slug to cart
 def addToCart(request, slug):
-    # get product with specified slug
-    product = getProductBySlug(slug)
-    
-    # fill ContentType foreign key
-    contentType = ContentType.objects.get(app_label="shop", model=product._meta.model_name)
-    objectId = product.id
-    contentObject = product
-
     # get current user
     user = request.user
-
     if user.id == None:
         if DEBUG: print("addToCart() Anonymous user")
 
         return redirect('/products/{}/'.format(str(slug)))
 
-    # create cart product object
-    models.CartProduct.objects.create(user=request.user, \
-                                      contentType=contentType, \
-                                      objectId=objectId, \
-                                      contentObject=contentObject, \
-                                      price=product.price, \
-                                      count=1)
+    product = getCartProductByUserIdBySlug(user.id, slug)
+    if product == None:
+        # get product with specified slug
+        product = getProductBySlug(slug)
+        
+        # fill ContentType foreign key
+        contentType = ContentType.objects.get(app_label="shop", model=product._meta.model_name)
+        objectId = product.id
+        contentObject = product
+
+        # create cart product object
+        models.CartProduct.objects.create(user=request.user, \
+                                        contentType=contentType, \
+                                        objectId=objectId, \
+                                        contentObject=contentObject, \
+                                        price=product.price, \
+                                        count=1)
+    else:
+        product.count += 1
+        product.price += product.contentObject.price
+        product.save()
 
     if DEBUG: print("addToCart() added")
 
@@ -252,13 +274,14 @@ def getOrderCart(request):
                 objectId = cartProduct.objectId
                 contentObject = cartProduct.contentObject
                 
-                # create order object
-                models.Order.objects.create(user=request.user, \
-                                    contentType=contentType,
-                                    objectId=objectId,
-                                    contentObject=contentObject,
-                                    deliveryAddress=deliveryAddress,
-                                    payment=paymentMethod)
+                for i in range(int(cartProduct.count)):
+                    # create order object
+                    models.Order.objects.create(user=request.user, \
+                                        contentType=contentType,
+                                        objectId=objectId,
+                                        contentObject=contentObject,
+                                        deliveryAddress=deliveryAddress,
+                                        payment=paymentMethod)
 
             for cartProduct in cartProducts:
                 cartProduct.delete()
@@ -269,10 +292,13 @@ def getOrderCart(request):
     else:
         form = OrderForm()
 
+    summary = 0
+    for cartProduct in cartProducts:
+        summary += cartProduct.price
 
-    context = {'form': form, 'cartProducts': cartProducts}
+    context = {'form': form, 'cartProducts': cartProducts, 'summary': summary}
 
-    if DEBUG: print("getOrderCart() context: {} cartProducts: {}".format(form, cartProducts))
+    if DEBUG: print("getOrderCart() context: {} cartProducts: {} summary: {}".format(form, cartProducts, summary))
 
     return render(request, 'shop/ordercart_page.html', context)
 

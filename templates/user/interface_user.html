@@ -1,10 +1,90 @@
 {% load static %}
-
+<!-- Navbar-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid justify-content-between">
+    <!-- Left elements -->
+    <div class="d-flex">
+      <!-- Brand -->
+      <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="{% url 'main_page_url' %}">
+        <img
+          src="{% static 'img/logo.png' %}"
+          height="60"
+          alt="logo"
+          loading="lazy"
+          style="margin-top: 2px;"
+        />
+      </a>
+    </div>
+    <!-- Left elements -->
+
+    <!-- Center elements -->
+    <form class="input-group w-auto my-auto d-none d-sm-flex">
+      <input
+        autocomplete="off"
+        type="search"
+        class="form-control rounded"
+        placeholder="Search"
+        style="min-width: 125px;"
+      />
+      <span class="input-group-text border-0 d-none d-lg-flex"
+        ><i class="fas fa-search"></i
+      ></span>
+    </form>
+    <!-- Center elements -->
+
+    <!-- Right elements -->
+    <ul class="navbar-nav flex-row">
+      {% if request.user.is_authenticated %}
+      <li class="nav-item dropdown me-3 me-lg-1">
+        <a
+          class="nav-link dropdown-toggle hidden-arrow"
+          href="#"
+          id="navbarDropdownMenuLink"
+          role="button"
+          data-mdb-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {% if user.image %}
+            <img
+            src="{{ user.image.url }}"
+            class="md-avatar rounded-circle"
+            height="50"
+            alt="Avatar"
+            loading="lazy"
+            />
+          {% else %}
+            <img
+            src="{% static 'img/noneimage.png' %}"
+            class="md-avatar rounded-circle"
+            height="50"
+            alt="Avatar"
+            loading="lazy"
+            />
+          {% endif %}
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="navbarDropdownMenuLink"
+        >
+        <li><a class="dropdown-item" href="{% url 'user_profile_url' %}">My profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'order_history_url' %}">Order history</a></li>
+        <li><a class="dropdown-item" href="{% url 'logout_url' %}">Logout</a></li>
+        </ul>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <h6>Welcome, <a href="{% url 'login_url' %}">log in to your account</a></h6>
+      </li>
+      {% endif %}
+    </ul>
+    <!-- Right elements -->
+  </div>
+</nav>
+<!-- Navbar -->
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <ul class="navbar-nav">
       {% if request.user.is_authenticated %}
-        <!-- Avatar -->
         <li class="nav-item dropdown">
           <a
             id="userIcon"
@@ -50,7 +130,7 @@
         
       {% else %}
         <li class="nav-item">
-          <a href="{% url 'login_url' %}">Login</a>
+          <h6>Welcome, <a href="{% url 'login_url' %}">log in to your account</a></h6>
         </li>
       {% endif %}
     </ul>
@@ -63,4 +143,4 @@
       />
     </a>
   </div>
-</nav>
+</nav> -->

@@ -17,6 +17,7 @@ class FeedbackForm(forms.ModelForm):
         widgets = {
             'rate': forms.NumberInput(attrs={'step': 0.1} ),
         }
+        
 class OrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
