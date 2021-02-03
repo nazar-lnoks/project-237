@@ -220,9 +220,28 @@ def getProductDetails(request, slug):
 
         empty = False
         if len(productFeedbacks)==0: empty = True
-        
-        context = { 'product':product, 'form':form, 'productFeedbacks':productFeedbacks, 'empty':empty}
 
+        orders_cart = models.CartProduct.objects.filter(user=request.user)
+        amount_cart = len(orders_cart)
+        objects = []
+
+        for i in orders_cart:
+            model = i.contentType.model_class()
+            product = model.objects.get(id=i.objectId)
+
+            order = {
+                'product': product
+            }
+            objects.append(order)
+
+        context={
+            'product':product, 
+            'form':form, 
+            'productFeedbacks':productFeedbacks, 
+            'empty':empty,
+            'amount_cart': amount_cart,
+            'products_cart':objects
+        }
         return render(request, 'shop/product_page.html', context)
     # except: return redirectToMainPage(request)
 
@@ -267,10 +286,25 @@ def getCategoryCatalog(request, slug):
             }
         else:
             account = get_object_or_404(ProfileUser, user=request.user)
+            orders_cart = models.CartProduct.objects.filter(user=request.user)
+            amount_cart = len(orders_cart)
+            objects = []
+
+            for i in orders_cart:
+                model = i.contentType.model_class()
+                product = model.objects.get(id=i.objectId)
+
+                order = {
+                    'product': product
+                }
+                objects.append(order)
+
             context={
                 'category':category_, 
                 'qs_products': result,
-                'account':account
+                'account':account,
+                'amount_cart': amount_cart,
+                'products_cart':objects
             }
 
     except models.Category.DoesNotExist:

@@ -4,7 +4,7 @@
 {% block title %} {{block.super}} - Profile {% endblock %}
 
 {% block content %}
-    {% include 'user/interface_user.html' with user=user%}
+{% include 'user/interface_user.html' with user=user cart=amount_cart products=products_cart%}
 
     <div class="container mb-5">
         <div class="row justify-content-around">

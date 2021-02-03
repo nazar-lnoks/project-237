@@ -21,9 +21,9 @@
         line-height: 1.5;
     }
 
-        .show {
+        /* .show {
             border: 2px solid red;
-        }
+        } */
 
         .detail {
             width:100%;
@@ -118,13 +118,11 @@
         }
         
         }));
-        
-
     });
 
     </script>
 
-    {% include 'user/interface_user.html' with user=account%}
+    {% include 'user/interface_user.html' with user=user cart=amount_cart products=products_cart%}
     <div class="container-fluid page ">
         <div class="row">
             

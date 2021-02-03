@@ -12,6 +12,30 @@ from .forms import SignUpForm, SetupProfileForm, LogInForm
 from .models import ProfileUser
 from shop.models import *
 
+def genCartContext(request):
+    orders_cart = CartProduct.objects.filter(user=request.user)
+    amount_cart = len(orders_cart)
+
+    orders = Order.objects.filter(user=request.user)
+    objects_cart = []
+
+    for i in orders_cart:
+        model = i.contentType.model_class()
+        product = model.objects.get(id=i.objectId)
+
+        order = {
+            'product': product
+        }
+        objects_cart.append(order)
+    
+    context={
+        'orders':objects_order,
+        'amount_cart': amount_cart,
+        'products_cart':objects_cart
+    }
+
+    return context
+
 def signUp(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -77,7 +101,27 @@ def userProfile(request):
             return HttpResponseRedirect('/account/profile')
     else:
         form = SetupProfileForm(instance=account)
-    return render(request, 'user/user_profile.html', {'form':form, 'user':account})
+
+    orders_cart = CartProduct.objects.filter(user=request.user)
+    amount_cart = len(orders_cart)
+    objects = []
+
+    for i in orders_cart:
+        model = i.contentType.model_class()
+        product = model.objects.get(id=i.objectId)
+
+        order = {
+            'product': product
+        }
+        objects.append(order)
+
+    context = {
+        'form':form, 
+        'user':account,
+        'amount_cart': amount_cart,
+        'products_cart':objects
+    }
+    return render(request, 'user/user_profile.html', context)
 
 @login_required()
 def orderHistory(request):
