@@ -5,6 +5,11 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.text import slugify
 from time import time
 
+from stdimage import StdImageField
+
+from io import StringIO
+from PIL import Image
+
 def gen_slug(model_):
     new_sl = slugify(model_, allow_unicode=True)
     return new_sl + '-' + str(int(time()))
@@ -25,17 +30,47 @@ class Product(models.Model):
     model = models.CharField(max_length=45, verbose_name='Model')
     slug = models.SlugField(unique=True, default='null')
     description = models.CharField(max_length=1024, verbose_name='Description')
-    image = models.ImageField(upload_to="products", verbose_name='Image')
+    image = models.ImageField(verbose_name='Image')
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Price')
     averageRate = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Average rate', default=0.0)
     availability = models.BooleanField(verbose_name='Availability')
     producer = models.CharField(max_length=64, verbose_name='Producer')
     producerCountry = models.CharField(max_length=64, verbose_name='Producer country')
     category = models.ForeignKey(Category, verbose_name='Category', on_delete=models.CASCADE)
-    
+
+
     def save(self, *args, **kwargs):
+
+        count = 0
         if not self.id:
             self.slug = gen_slug(self.model)
+            count = 1
+        print(self.image.path)
+        super().save(*args, **kwargs)
+
+        image_field = self.image
+        
+        # image_file = StringIO(image_field.read())
+        image = Image.open(image_field.path)
+        w, h = image.size
+
+        if count==1:
+        # if w!=1000 or h!=750:
+
+            image = image.resize((1000, 750), Image.ANTIALIAS)
+
+            image_file = image_field.path
+            # image.save(image_file, 'JPEG', quality=90)
+            img = image.convert('RGB')
+            
+            img.save(image_file+str('.thumbnail.jpeg'), 'JPEG')
+
+            image_field.file = image_file+str('.subnail') + str('.jpeg')
+            
+            self.count = 1
+            super().save(*args, **kwargs)
+
+        self.count = 1
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -43,7 +78,7 @@ class Product(models.Model):
 
 
 class Laptop(Product):
-    diagonal = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Diagonal')
+    diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')
     processor = models.CharField(max_length=255, verbose_name='Processor')
@@ -58,7 +93,7 @@ class Laptop(Product):
         return "{} {}".format(self.category.name, self.model)
 
 class Monitor(Product):
-    diagonal = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Diagonal')
+    diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     displayFrequency = models.PositiveIntegerField(verbose_name='Dispay frequency')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')
@@ -105,7 +140,7 @@ class Mouse(Product):
         return "{}".format(self.sensorDpi)
 
 class Smartphone(Product):
-    diagonal = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Diagonal')
+    diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')
     processor = models.CharField(max_length=255, verbose_name='Processor')
@@ -131,7 +166,7 @@ class Smartwatch(Product):
     material = models.CharField(max_length=32, verbose_name='Material')
 
     def __str__(self):
-        return "Smartwatch {}".format(self.id)
+        return "{} {}".format(self.moistureProtection, self.material)
 
 
 class CartProduct(models.Model):
@@ -154,16 +189,13 @@ class Order(models.Model):
     contentType = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     objectId = models.PositiveIntegerField()
     contentObject = GenericForeignKey('contentType', 'objectId')
-    date_buy = models.DateField(auto_now_add=True)
 
+    date_delivery = models.DateField(auto_now_add=True)
     deliveryAddress = models.CharField(max_length=255, verbose_name='Delivery address')
     payment = models.CharField(max_length=255, verbose_name='Payment')
 
     def __str__(self):
-        return "Order {}".format(self.id)
-
-    class Meta:
-        ordering = ['-id']
+        return "{}".format(self.product.model)
 
 class Feedback(models.Model):
     name = models.CharField(max_length=45, verbose_name='User name')
@@ -173,12 +205,14 @@ class Feedback(models.Model):
     contentObject = GenericForeignKey('contentType', 'objectId')
 
     comment = models.TextField(verbose_name='Comment')
-    rate = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Rate')
+    rate = models.PositiveIntegerField(verbose_name='Rate')
+    pub_date = models.DateField(auto_now_add=True )
 
     def __str__(self):
         return "{}".format(self.name)
 
-
+    class Meta:
+        ordering = ['-id']
 
 
 

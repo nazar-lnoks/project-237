@@ -1,18 +1,41 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} {{block.super}} {% endblock %}
+{% block title %} {{block.super}} - Sign up {% endblock %}
 
 {% block content %}
-    {% include 'user/interface_user.html' with user=account %}
 
+    {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
     <h1>Main</h1>
-    <h1>Categories:</h1>
-    <h1>{{account}}</h1>
-    {% for category in categories %}
-        <li><a href="{% url 'getCategoryCatalog_url' slug=category.slug %}">{{category.name}}</a></li>
-    {% endfor %}
+    <br>
 
-    <a href="{% url 'getCart_url' %}" class="btn btn-primary">Cart</a>
+    <h1>Categories:</h1>
+
+    {% if emptyCategorys %}
+        <p>There is no categories</p>
+    {% endif %}
+
+    <ul>
+    {% for category in categories %}
+
+        <li><a href="{% url 'getCategoryCatalog_url' slug=category.slug %}">{{category.name}}</a></li>
+
+    {% endfor %}
+    </ul>
+    
+    <h1>Top Products</h2>
+
+    {% if emptyTopProducts %}
+        <p>There is no products yet</p>
+    {% endif %}
+
+    <ul>
+    {% for product in topProducts %}
+
+        <li><a href="{% url 'getProductDetails_url' slug=product.slug %}">{{ product.model }}</a></li>
+
+    {% endfor %}
+    </ul>
+    
 
 {% endblock %}

@@ -4,7 +4,7 @@
 {% block title %} {{block.super}} - Profile {% endblock %}
 
 {% block content %}
-    {% include 'user/interface_user.html' with user=user%}
+    {% include 'user/interface_user.html' with user=user cart=amount_cart products=objects_cart%}
 
     <div class="container mb-5">
         <div class="row justify-content-around">
@@ -24,7 +24,7 @@
             <div class="col-md-6 mt-5">
                 <h2 class="auth-title">Order history</h2>
 
-                {% for order in orders %}
+                {% for order in objects_order %}
                 <div class="card mb-3">
                     <div style="text-align: center;" class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                       <img

@@ -10,7 +10,7 @@ from time import time
 
 from .forms import SignUpForm, SetupProfileForm, LogInForm
 from .models import ProfileUser
-from shop.models import Order
+from shop.models import *
 
 def signUp(request):
     if request.method == 'POST':
@@ -81,20 +81,39 @@ def userProfile(request):
 
 @login_required()
 def orderHistory(request):
-    user = request.user
-    account = get_object_or_404(ProfileUser, user=user)
+    account = get_object_or_404(ProfileUser, user=request.user)
+    orders_cart = CartProduct.objects.filter(user=request.user)
+    amount_cart = len(orders_cart)
 
-    objects = []
-    orders = Order.objects.filter(user=user)
+    orders = Order.objects.filter(user=request.user)
 
-    for i in orders:
+    objects_order = []
+    objects_cart = []
+
+    for i in orders_cart:
         model = i.contentType.model_class()
         product = model.objects.get(id=i.objectId)
 
         order = {
-            'date': i.date_buy,
             'product': product
         }
-        objects.append(order)
-    return render(request, 'user/order_history.html', {'user':account, 'orders':objects})
+        objects_cart.append(order)
+
+    for p in orders:
+        model = p.contentType.model_class()
+        product = model.objects.get(id=p.objectId)
+
+        order = {
+            'date': p.date_delivery,
+            'product': product
+        }
+        objects_order.append(order)
+
+    context={
+        'user':account, 
+        'orders':objects_order,
+        'amount_cart': amount_cart,
+        'products_cart':objects_cart
+    }
+    return render(request, 'user/order_history.html', context)
 
