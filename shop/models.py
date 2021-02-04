@@ -27,7 +27,7 @@ class Product(models.Model):
     model = models.CharField(max_length=45, verbose_name='Model')
     slug = models.SlugField(unique=True, default='null')
     description = models.CharField(max_length=1024, verbose_name='Description')
-    image = models.ImageField(verbose_name='Image')
+    image = models.ImageField(upload_to='products', verbose_name='Image')
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Price')
     averageRate = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Average rate', default=0.0)
     availability = models.BooleanField(verbose_name='Availability')
@@ -192,7 +192,7 @@ class Order(models.Model):
     payment = models.CharField(max_length=255, verbose_name='Payment')
 
     def __str__(self):
-        return "{}".format(self.product.model)
+        return "{}".format(self.objectId)
 
 class Feedback(models.Model):
     name = models.CharField(max_length=45, verbose_name='User name')

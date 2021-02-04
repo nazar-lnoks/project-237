@@ -31,7 +31,7 @@
       />
       
       
-      <button type='submit'>Search</button>
+      <button type="submit" class="btn btn-primary">Search</button>
       
     </form>
     <!-- Center elements -->
@@ -62,7 +62,7 @@
                   <div style="text-align: center;" class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                     <a href="{% url 'getProductDetails_url' slug=order.contentObject.slug %}">
                       <img
-                        src="{{order.product.image.url}}"
+                        src="{{order.contentObject.image.url}}"
                         class="img-fluid"
                       />
                     </a>
@@ -79,6 +79,7 @@
             <p class="card-text">
               total price: {{totalPrice}}$
             </p>
+            <a href="{% url 'orderCart_url' %}" class="btn btn-primary">Cart</a>
           </ul>
         </li>
         <li class="nav-item dropdown me-3 me-lg-1">
@@ -123,70 +124,5 @@
         </li>
       {% endif %}
     </ul>
-    <!-- Right elements -->
   </div>
 </nav>
-<!-- Navbar -->
-<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <ul class="navbar-nav">
-      {% if request.user.is_authenticated %}
-        <li class="nav-item dropdown">
-          <a
-            id="userIcon"
-            class="nav-link dropdown-toggle d-flex align-items-center"
-          >
-          {% if user.image %}
-            <img
-              src="{{user.image.url}}"
-              class="md-avatar rounded-circle"
-              height="50"
-              alt="Avatar"
-              loading="lazy"
-            />
-          {% else %}
-            <h1>Not image</h1>
-          {% endif %}
-          </a>
-          <ul id="profileList" class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'user_profile_url' %}">My profile</a></li>
-            <li><a class="dropdown-item" href="#">Order history</a></li>
-            <li><a class="dropdown-item" href="{% url 'logout_url' %}">Logout</a></li>
-          </ul>
-        </li>
-
-        <script>
-          var icon = document.getElementById('userIcon');
-          var list = document.getElementById('profileList');
-          icon.addEventListener("click", function(){
-            if(list.style.display === 'none'){
-              list.style.display = 'block';
-            } else {
-              list.style.display = 'none';
-            }
-          });
-          icon.addEventListener('click', function(){
-            if(list.style.display === 'none'){
-              list.style.display = 'block';
-            } else {
-              list.style.display = 'none';
-            }
-          })
-        </script>
-        
-      {% else %}
-        <li class="nav-item">
-          <h6>Welcome, <a href="{% url 'login_url' %}">log in to your account</a></h6>
-        </li>
-      {% endif %}
-    </ul>
-    <a class="navbar-brand" href="{% url 'main_page_url' %}">
-      <img
-        src="{% static 'img/logo.png' %}"
-        height="60"
-        alt=""
-        loading="lazy"
-      />
-    </a>
-  </div>
-</nav> -->

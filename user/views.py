@@ -101,28 +101,21 @@ def userProfile(request):
             return HttpResponseRedirect('/account/profile')
     else:
         form = SetupProfileForm(instance=account)
+        
 
     orders_cart = CartProduct.objects.filter(user=request.user)
-    amount_cart = len(orders_cart)
-    objects = []
 
+    amount_cart = 0
     totalPrice = 0
     for i in orders_cart:
-        model = i.contentType.model_class()
-        product = model.objects.get(id=i.objectId)
-
-        order = {
-            'product': product
-        }
-        objects.append(order)
-
+        amount_cart += i.count
         totalPrice += i.price
 
     context = {
         'form':form, 
         'user':account,
         'amount_cart': amount_cart,
-        'products_cart':objects,
+        'products_cart':orders_cart,
         'totalPrice': totalPrice
     }
     return render(request, 'user/user_profile.html', context)
@@ -130,23 +123,21 @@ def userProfile(request):
 @login_required()
 def orderHistory(request):
     account = get_object_or_404(ProfileUser, user=request.user)
-    orders_cart = CartProduct.objects.filter(user=request.user)
-    amount_cart = len(orders_cart)
-
     orders = Order.objects.filter(user=request.user)
 
+    orders_cart = CartProduct.objects.filter(user=request.user)
+    
     objects_order = []
     objects_cart = []
 
+    amount_cart = 0
+    totalPrice = 0
     for i in orders_cart:
-        model = i.contentType.model_class()
-        product = model.objects.get(id=i.objectId)
+        amount_cart += i.count
+        totalPrice += i.price
 
-        order = {
-            'product': product
-        }
-        objects_cart.append(order)
-
+    print(amount_cart)
+    
     for p in orders:
         model = p.contentType.model_class()
         product = model.objects.get(id=p.objectId)
@@ -157,10 +148,12 @@ def orderHistory(request):
         }
         objects_order.append(order)
 
+    print(objects_order)
     context={
         'user':account, 
         'orders':objects_order,
         'amount_cart': amount_cart,
-        'products_cart':objects_cart
+        'products_cart':orders_cart,
+        'totalPrice': totalPrice
     }
     return render(request, 'user/order_history.html', context)

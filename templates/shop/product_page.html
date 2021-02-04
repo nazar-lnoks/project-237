@@ -22,10 +22,6 @@
         line-height: 1.5;
     }
 
-        .show {
-            border: 2px solid red;
-        }
-
         .detail {
             width:100%;
             height: 10rem;
@@ -136,9 +132,8 @@
 
             <div class='card col-md-5 col-sm-12 properties_block  '>
                 <div class="card-body">
-                    <h3 style="text-align:center;" class="mb-4">{{product.model}}</h3>
+                    <h3 style="text-align:center;" class="mb-4">{{product.producer}} {{product.model}}</h3>
                     <p><b>Desctiption: </b>{{product.description}}</p>
-                    <p><b>Producer: </b>{{product.producer}}</p>
                     <p><b>Country: </b>{{product.producerCountry}}</p>
                     <p><b>Availability: </b>{{product.availability}}</p>
                     <p><b>Average Rate: </b>{{product.averageRate}}</p>
