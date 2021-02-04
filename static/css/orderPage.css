@@ -1,0 +1,139 @@
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+
+
+.products {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.orderForm {
+    display: flex;
+    justify-content: center;
+}
+.orderFormCardPayment {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    display:none;
+}
+
+
+.productSummary {
+    display: flex;
+    justify-content: center;
+}
+
+.product {
+    margin: 10px;
+
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+
+    min-width: fit-content;
+
+    border-top: 1px solid grey;
+}
+
+
+.productImage {
+    margin: 10px;
+
+    min-width: fit-content;
+    min-height: fit-content;
+
+    max-width: 200px;
+
+    overflow: hidden;
+}
+.productImage img {
+    width: 100px;
+    height: 100px;
+}
+
+.productModel {
+    margin: 10px;
+
+    min-width: fit-content;
+    min-height: fit-content;
+
+    max-width: 300px;
+}
+.productModel p {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.productPrice {
+    margin: 10px;
+
+    min-width: fit-content;
+    min-height: fit-content;
+
+    max-width: 200px;
+}
+.productPrice p {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.productCount {
+    margin: 10px;
+
+    min-width: fit-content;
+    min-height: fit-content;
+
+    max-width: 200px;
+}
+.productCount p {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.productSummary {
+    margin: 10px;
+
+    min-width: fit-content;
+    min-height: fit-content;
+
+    max-width: 200px;
+}
+.productSummary p {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+@media (max-width: 1024px)  {
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .products {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .product {
+        margin: 20px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        max-width: fit-content;
+    }
+
+    .product * {
+        margin: 2px;
+    }
+    
+}

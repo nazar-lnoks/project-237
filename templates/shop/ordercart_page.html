@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block title %} {{block.super}} - Order product {% endblock %}
+
+{% block content %}
+    {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        $("input[name='payment']").click(function() {
+            if ($("#id_payment_0").is(":checked")) {
+                //$("#div_entrega_outro").show();
+            }
+            else {
+                //$("#div_entrega_outro").hide();
+            }
+
+            if ($("#id_payment_1").is(":checked")) {
+                $("#id_orderFormCardPayment").show();
+
+            }
+            else {
+                $("#id_orderFormCardPayment").hide();
+            }
+        });
+        });
+    </script>
+
+    <div class="container1">
+        <h2 class="auth-title">Order</h2>
+        <div class="content">
+            
+            <div class="products">
+                <div class="productSummary">
+                    <p>Summary: {{ summary }} grn</p>
+                </div>
+                {% for cartProduct in cartProducts %}
+                    <div class="product">
+                        <div class="productImage">
+                            <img src="../../media/{{ cartProduct.contentObject.image }}">
+                        </div>
+                        <div class="productModel">
+                            <p>Model: {{ cartProduct.contentObject.model }} </p>
+                        </div>
+                        <div class="productPrice">
+                            <p>Price: {{ cartProduct.contentObject.price }} grn</p>
+                        </div>
+                        <div class="productCount">
+                            <p>Count: {{ cartProduct.count }}</p>
+                        </div>
+                        <div class="productSummary">
+                            <p>Summary: {{ cartProduct.price }} grn</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="orderForm">
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div>
+                            <p>
+                            {{ field.label_tag }}<br>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small style="color: grey">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                    <div class="orderFormCardPayment", id="id_orderFormCardPayment">
+
+                    </div>
+                    <div class="btn-block">
+                        <button type="submit" class="btn btn-primary auth-btn">Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

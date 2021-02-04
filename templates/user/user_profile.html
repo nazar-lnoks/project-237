@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Profile {% endblock %}
+
+{% block content %}
+    {% include 'user/interface_user.html' with user=user cart=amount_cart products=products_cart totalPrice=totalPrice%}
+
+    <div class="container mb-5">
+        <div class="row justify-content-around">
+            <div class="col-md-4 mt-5">
+                <div class="list-group">
+                    <a href="{% url 'user_profile_url' %}" class="list-group-item list-group-item-action active" aria-current="true">
+                        My profile
+                    </a>
+                    <a href="{% url 'order_history_url' %}" class="list-group-item list-group-item-action">
+                        Order history
+                    </a>
+                    <a href="{% url 'logout_url' %}" class="list-group-item list-group-item-action">
+                        Logout
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6 mt-5">
+                <h2 class="auth-title">Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <p>
+                        {{ field.label_tag }}<br>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                        </p>
+                    {% endfor %}
+                    {% for message in messages %}
+                        <p style="color: grey">{{ message }}</p>
+                    {% endfor %}
+                    <div class="btn-block">
+                        <button type="submit" class="btn btn-primary auth-btn">Edit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

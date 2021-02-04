@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Sign up {% endblock %}
+
+{% block content %}
+    {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
+
+    <style>
+        .rating-header {
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        /* For blocks */
+
+        .text_block {
+        border-radius: 10px;
+
+        font-family: Arial, sans-serif;
+        font-size: 20px;
+        line-height: 1.5;
+    }
+
+        .show {
+            border: 2px solid red;
+        }
+
+        .detail {
+            width:100%;
+            height: 10rem;
+        }
+
+        .leftBlock {
+                height: 20rem;
+            }
+        .rightBlock {
+            height: 20rem;
+        }
+
+        .img_block{
+            padding:0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .page{
+            margin-top: 3%;
+        }
+        
+        @media screen and (min-width: 768px) {
+            .img_block {
+                margin-right: 1%;
+                width:59%;
+            }
+            .properties_block {
+                margin-left: 1%;
+                width:39%;
+            }
+
+            .page{
+                width: 92%;
+                margin-right: 4%;
+                margin-left: 4%;
+            }
+
+           
+        }
+
+        @media screen and (min-width: 992px) {
+            .page{
+                width: 84%;
+                margin-right: 8%;
+                margin-left: 8%;
+            }
+        }
+
+        .product_img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .properties_block{
+            word-wrap: break-word;
+        }
+
+        .comment{
+            width:30%;
+            min-width: 20%;
+        }
+
+        .fa {
+            font: normal normal normal 14px/1 FontAwesome;
+        }
+
+    </style>
+
+    <script>
+        jQuery(document).ready(function($){
+	    
+        $(".btnrating").on('click',(function(e) {
+        
+        var previous_value = $("#selected_rating").val();
+        
+        var selected_value = $(this).attr("data-attr");
+        $("#selected_rating").val(selected_value);
+        
+        $(".selected-rating").empty();
+        $(".selected-rating").html(selected_value);
+        
+        for (i = 1; i <= selected_value; ++i) {
+        $("#rating-star-"+i).toggleClass('btn-warning');
+        $("#rating-star-"+i).toggleClass('btn-default');
+        }
+        
+        for (ix = 1; ix <= previous_value; ++ix) {
+        $("#rating-star-"+ix).toggleClass('btn-warning');
+        $("#rating-star-"+ix).toggleClass('btn-default');
+        }
+        
+        }));
+        
+
+    });
+
+    </script>
+
+    <div class="container-fluid page ">
+        <div class="row">
+            
+            <div class='card col-md-7 col-sm-12 img_block '>
+                <div>
+                    <img src="{{ product.image.url }}.thumbnail.jpeg" class="rounded product_img" alt="">
+                </div> 
+            </div>
+
+            <div class='card col-md-5 col-sm-12 properties_block  '>
+                <div class="card-body">
+                    <h3 style="text-align:center;" class="mb-4">{{product.model}}</h3>
+                    <p><b>Desctiption: </b>{{product.description}}</p>
+                    <p><b>Producer: </b>{{product.producer}}</p>
+                    <p><b>Country: </b>{{product.producerCountry}}</p>
+                    <p><b>Availability: </b>{{product.availability}}</p>
+                    <p><b>Average Rate: </b>{{product.averageRate}}</p>
+                    <p><b>Price: </b>{{product.price|floatformat}}</p>
+                    
+                    <div style="position: absolute;bottom:15;">
+                        <a href="{% url 'addProductToCart_url' slug=product.slug %}" class="btn btn-primary">Add to cart</a>
+                        <a href="{% url 'orderProduct_url' slug=product.slug %}" class="btn btn-primary">Buy</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class='card col-md-12 col-sm-12  mt-4 '> 
+                <p style="word-wrap: break-word;"><b>Details: </b>
+                    <p>
+                        {% for field in fields %}
+                            {{ field.0 }}: {{ field.1 }};
+                        {% endfor %}
+                    </p>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card col-sm-12 col-md-6 mt-5">
+        <div class="card-body">
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.help_text %}
+                <small style="color: grey">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+                <p style="color: red">{{ error }}</p>
+            {% endfor %}
+            </p>
+        {% endfor %}
+
+        <div class="form-group" id="rating-ability-wrapper">
+            <label class="control-label" for="rating">
+            
+            <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required">
+            </label>
+            <h2 class="bold rating-header">
+            <div style="display:none;"><span class="selected-rating star_block" name="int_rate">0</span><small> / 5</small></div>
+            </h2>
+            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="2" id="rating-star-2">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="3" id="rating-star-3">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="4" id="rating-star-4">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="5" id="rating-star-5">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary auth-btn">Send</button>
+        </div>
+    </form>
+</div>
+</div>
+
+
+    <h2 style="text-align:center;" class="mt-4">Comments:</h2>
+
+    <div class="container-fluid">
+        
+
+    {% if empty %}
+        <p>There is no comments yet</p>
+    {% endif %}
+
+    {% for feedback in productFeedbacks %}        
+        <div class="card col-sm-12 col-md-6 mb-5">
+            <div class="card-body">
+              <h5 class="card-title">{{ feedback.name }}</h5>
+
+              <span class="date" >{{ feedback.pub_date }}</span>
+
+              <p class="card-text">
+                {{ feedback.comment }}
+              </p>
+              {% if request.user.is_staff %}
+    
+                <a href="{% url 'adminDeleteComment_url' id=feedback.id slug=product.slug %}" class="btn btn-primary">Delete</a>
+    
+              {% endif %}
+              
+            </div>
+
+
+            <div class="form-group" id="rating-ability-wrapper" >
+                <label class="control-label" for="rating">
+                <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required">
+                </label>
+                <button type="button" class="btnrating-com-{{ feedback.id }} btn btn-lg" data-attr="1" id="rating-star-com-1">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btnrating-com-{{ feedback.id }} btn btn-lg" data-attr="2" id="rating-star-com-2">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btnrating-com-{{ feedback.id }} btn btn-lg" data-attr="3" id="rating-star-com-3">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btnrating-com-{{ feedback.id }} btn btn-lg" data-attr="4" id="rating-star-com-4">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="btnrating-com-{{ feedback.id }} btn btn-lg" data-attr="5" id="rating-star-com-5">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </button>
+            </div>
+            <input type="hidden" value='{{ feedback.rate }}' id='rate-{{ feedback.rate }}'>
+
+
+          </div>
+
+        <script>
+
+            var stars = document.getElementsByClassName('btnrating-com-{{ feedback.id }}')
+            var hiddenEl = document.getElementById('rate-{{ feedback.rate }}').value
+            console.log(hiddenEl)
+            console.log(stars)
+
+            for (var i = 0; i < hiddenEl; i++) {
+                stars[i].classList.add('btn-warning')
+            }
+        </script>
+
+    {% endfor %}
+    
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Cart products {% endblock %}
+
+{% block content %}
+    {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
+    <h1>Cart Page</h1>
+
+    {% for cartProduct in cartProducts %}
+        <h1>Model {{cartProduct.contentObject.model}} </h1>
+        <h1>Count {{cartProduct.count}} </h1>
+        <h1>Price {{cartProduct.price}} </h1>
+        <br>
+    {% endfor %}
+
+    <a href="{% url 'orderCart_url' %}" class="btn btn-primary">Buy cart</a>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+html, body {
+    height: auto;
+}
+
+.content-center {
+    justify-content: center;
+}
+
+.auth-title {
+    text-align: center;
+}
+
+.btn-block {
+    text-align: center;
+}
+
+@media (min-width: 768px){
+    .logo-img{
+        width: 400px;
+        height: 250px;
+    }
+}

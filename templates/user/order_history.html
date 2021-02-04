@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Profile {% endblock %}
+
+{% block content %}
+    {% include 'user/interface_user.html' with user=user cart=amount_cart products=objects_cart%}
+
+    <div class="container mb-5">
+        <div class="row justify-content-around">
+            <div class="col-md-4 mt-5">
+                <div class="list-group">
+                    <a href="{% url 'user_profile_url' %}" class="list-group-item list-group-item-action" aria-current="true">
+                        My profile
+                    </a>
+                    <a href="{% url 'order_history_url' %}" class="list-group-item list-group-item-action active">
+                        Order history
+                    </a>
+                    <a href="{% url 'logout_url' %}" class="list-group-item list-group-item-action">
+                        Logout
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6 mt-5">
+                <h2 class="auth-title">Order history</h2>
+
+                {% for order in objects_order %}
+                <div class="card mb-3">
+                    <div style="text-align: center;" class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                      <img
+                        style="width: 400px; object-fit: contain;"
+                        src="{{order.product.image.url}}"
+                        class="img-fluid"
+                      />
+                      <a href="#!">
+                        <div class="mask" style="background-color: rgba(251, 251, 251, 0.15)"></div>
+                      </a>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">{{order.product.producer}} {{order.product.model}}</h5>
+                      <p class="card-text">
+                        {{order.product.price}}$
+                      </p>
+                      <a href="#!" class="btn btn-primary">View</a>
+                    </div>
+                    <div class="card-footer text-muted">{{order.date}}</div>
+                  </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

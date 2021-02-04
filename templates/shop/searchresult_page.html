@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{block.super}} - Search result {% endblock %}
+
+{% block content %}
+
+  {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
+    <h1 align="center" id="categoryName">{{ category.name }}</h1>
+
+    {% if empty %}
+      <p>There is no products yet</p>
+    {% endif %}
+
+    <style>
+      
+      #categoryName {
+        margin-top: 2%;
+      }
+
+      @media screen and (max-width: 576px) {
+
+        .parent {
+          width: 100%;
+            
+          top: 0;
+          left: 0;
+          overflow: auto;
+          white-space: nowrap;
+          text-align: center;
+          /* font-size: 0; */
+        }
+
+        .parent:before {
+          display: inline-block;
+          vertical-align: middle;
+          content: '';
+            }
+
+        .product_card_block{
+          display: inline-block;
+          white-space: normal;
+          vertical-align: middle;
+          text-align: left;
+        }
+
+      }
+
+      .card_class{
+        width: 16rem;
+      }
+
+      @media screen and (min-width: 576px) and (max-width: 768px)  {
+        .card_class{
+          width: 15rem;
+        }
+      }
+
+      @media screen and (min-width: 768px) and (max-width: 992px)  {
+        .card_class{
+          width: 14rem;
+        }
+      }
+
+      @media screen and (min-width: 992px) {
+        .card_class{
+          width: 18rem;
+        }
+      }
+
+      @media screen and (min-width: 1200px) {
+        .card_class{
+          width: 22rem;
+        }
+      }
+      
+    </style>
+
+    <div class="container">
+      <div class="row">
+        {% for product in products %}
+        
+
+        <div class="col-md-4 col-sm-6 product_card" style="margin-top: 3%;">
+          
+          <div class="parent">
+            <div class="product_card_block">
+              <div class="card card_class">
+                <img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"> <!-- style="height: 18rem;" -->
+                <div class="card-body">
+                  <h5 class="card-title">{{ product.model }}</h5>
+                  <p class="card-text">{{ product.description }}</p>
+                  <p class="card-text">{{ product.averageRate|floatformat }}</p>
+
+
+                  <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="btn btn-primary">Read</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+
+        {% endfor %}
+  </div>
+</div>
+  
+{% endblock %}
