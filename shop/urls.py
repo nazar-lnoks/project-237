@@ -14,6 +14,8 @@ urlpatterns = [
     path('products/<str:slug>', views.addToCart, name='addProductToCart_url'),
 
     path('products/deleteFeedback/<int:id>/<str:slug>/', views.adminDeleteComment, name='adminDeleteComment_url'),
+    path('products/delete/<str:slug>/', views.deleteProduct, name='deleteProduct_url'),
+    path('cart/delete/<int:id>', views.deleteCartProduct, name='deleteCartProduct_url'),
     path('search/<str:query>', views.getWantedProducts, name='getWantedproducts_url'),
 
     path('categories/', views.redirectToMainPage),

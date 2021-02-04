@@ -4,7 +4,15 @@
 {% block title %} {{block.super}} - Sign up {% endblock %}
 
 {% block content %}
-    {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
+{% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!------ Include the above in your HEAD tag ---------->
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <style>
         .rating-header {
@@ -22,9 +30,6 @@
         line-height: 1.5;
     }
 
-        .show {
-            border: 2px solid red;
-        }
 
         .detail {
             width:100%;
@@ -93,6 +98,34 @@
             font: normal normal normal 14px/1 FontAwesome;
         }
 
+        @media screen and (min-width: 768px) {
+
+            button.btn.btn-danger.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-danger.topProductsBtn:hover{
+                transform: scale(1.1);
+            }
+
+            button.btn.btn-danger.topProductsBtn:active{
+                transform: scale(0.9);
+            }
+
+            button.btn.btn-success.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-success.topProductsBtn:hover{
+                transform: scale(1.05);
+            }
+
+            button.btn.btn-success.topProductsBtn:active{
+                transform: scale(0.95);
+            }
+            
+        }
+
     </style>
 
     <script>
@@ -125,6 +158,15 @@
 
     </script>
 
+
+    <!-- <h1>Product Page</h1>
+
+    <h1> {{product.model}} </h1>
+    <h1> {{product.description}} </h1>
+    <h1> {{product.price}} </h1>
+    <h1> {{product.averageRate}} </h1>
+    <img src="{{ product.image.url }}" alt="" width="200" height="200"> -->
+
     <div class="container-fluid page ">
         <div class="row">
             
@@ -145,8 +187,14 @@
                     <p><b>Price: </b>{{product.price|floatformat}}</p>
                     
                     <div style="position: absolute;bottom:15;">
-                        <a href="{% url 'addProductToCart_url' slug=product.slug %}" class="btn btn-primary">Add to cart</a>
-                        <a href="{% url 'orderProduct_url' slug=product.slug %}" class="btn btn-primary">Buy</a>
+                        {% if product.availability == True %}
+                            <a href="{% url 'addProductToCart_url' slug=product.slug %}"><button type="button" class="btn btn-primary topProductsBtn">Add to cart</button></a>
+                            <a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-success topProductsBtn">Buy</button></a>
+                        {% endif %}
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'deleteProduct_url' slug=product.slug %}" class="btn btn-danger topProductsBtn">Delete</a>
+                        {% endif %}
+                        
                     </div>
 
                 </div>
@@ -161,6 +209,10 @@
                     </p>
                 </p>
             </div>
+
+            <!-- <div class='col-md-6 col-sm-12 '>img-detail</div>
+            <div class='col-md-6 col-sm-12 '>properties</div>
+            <div class='col-md-12 '>detail properties</div> -->
 
         </div>
     </div>
@@ -188,6 +240,7 @@
             
             <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required">
             </label>
+            <span>Your rate: </span>
             <h2 class="bold rating-header">
             <div style="display:none;"><span class="selected-rating star_block" name="int_rate">0</span><small> / 5</small></div>
             </h2>
@@ -218,15 +271,18 @@
 
     <h2 style="text-align:center;" class="mt-4">Comments:</h2>
 
-    <div class="container-fluid">
+    <div class="container-fluid mb-5">
         
 
     {% if empty %}
         <p>There is no comments yet</p>
     {% endif %}
 
-    {% for feedback in productFeedbacks %}        
-        <div class="card col-sm-12 col-md-6 mb-5">
+    {% for feedback in productFeedbacks %}
+
+        <hr>
+        
+        <div class="card col-sm-12 col-md-6">
             <div class="card-body">
               <h5 class="card-title">{{ feedback.name }}</h5>
 
@@ -268,6 +324,8 @@
 
 
           </div>
+            
+
 
         <script>
 
@@ -282,7 +340,10 @@
         </script>
 
     {% endfor %}
+
+    
     
 </div>
-
+<br>
 {% endblock %}
+

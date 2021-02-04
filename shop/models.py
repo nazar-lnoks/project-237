@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.utils.text import slugify
 from time import time
 
@@ -27,13 +27,16 @@ class Product(models.Model):
     model = models.CharField(max_length=45, verbose_name='Model')
     slug = models.SlugField(unique=True, default='null')
     description = models.CharField(max_length=1024, verbose_name='Description')
-    image = models.ImageField(verbose_name='Image')
+    image = models.ImageField(upload_to='products', verbose_name='Image')
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Price')
     averageRate = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Average rate', default=0.0)
     availability = models.BooleanField(verbose_name='Availability')
     producer = models.CharField(max_length=64, verbose_name='Producer')
     producerCountry = models.CharField(max_length=64, verbose_name='Producer country')
     category = models.ForeignKey(Category, verbose_name='Category', on_delete=models.CASCADE)
+
+    feedback = GenericRelation('Feedback', object_id_field='objectId', content_type_field='contentType')
+    
 
 
     def save(self, *args, **kwargs):
@@ -192,7 +195,8 @@ class Order(models.Model):
     payment = models.CharField(max_length=255, verbose_name='Payment')
 
     def __str__(self):
-        return "{}".format(self.product.model)
+        return "{}".format(self.objectId)
+
 
 class Feedback(models.Model):
     name = models.CharField(max_length=45, verbose_name='User name')

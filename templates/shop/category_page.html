@@ -4,8 +4,8 @@
 {% block title %} {{block.super}} - Sign up {% endblock %}
 
 {% block content %}
+{% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
 
-  {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
     <h1 align="center" id="categoryName">{{ category.name }}</h1>
 
     {% if empty %}
@@ -46,6 +46,10 @@
 
       }
 
+      .product_card{
+        /* margin-right: 1%; */
+      }
+
       .card_class{
         width: 16rem;
       }
@@ -73,6 +77,65 @@
           width: 22rem;
         }
       }
+
+
+
+      /*  */
+
+
+        button.btn.btn-danger.topProductsBtn {
+            font-size: 15px;
+        }
+
+        @media screen and (min-width: 576px) and (max-width: 768px)  {
+            button.btn.btn-danger.topProductsBtn {
+                font-size: 12px;
+            }
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 992px)  {
+            
+            button.btn.btn-danger.topProductsBtn {
+                font-size: 13px;
+            }
+        }
+
+        @media screen and (min-width: 992px) {
+            
+            button.btn.btn-danger.topProductsBtn {
+                font-size: 15px;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            .product_card {
+                transition: .2s;
+            }
+
+            .product_card:hover{
+                transform:scale(1.03);
+
+            }
+            .content_box{
+                transition: .2s;
+            }
+            .product_card:hover .content_box{
+                box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2);
+            }
+
+            button.btn.btn-danger.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-danger.topProductsBtn:hover{
+                transform: scale(1.1);
+            }
+
+            button.btn.btn-danger.topProductsBtn:active{
+                transform: scale(0.9);
+            }
+            
+        }
       
     </style>
 
@@ -87,14 +150,14 @@
           <div class="parent">
             <div class="product_card_block">
               <div class="card card_class">
-                <img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"> <!-- style="height: 18rem;" -->
-                <div class="card-body">
+                <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="imageLink"><img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a>
+                <div class="card-body content_box">
                   <h5 class="card-title">{{ product.model }}</h5>
-                  <p class="card-text">{{ product.description }}</p>
-                  <p class="card-text">{{ product.averageRate|floatformat }}</p>
+                  <p class="card-text" style="color:grey;">{{ product.description|truncatechars:40 }}</p>
+                  <p class="card-text">Rate: {{ product.averageRate|floatformat }}</p>
 
 
-                  <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="btn btn-primary">Read</a>
+                  <p class="text-center"><a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-danger topProductsBtn">Buy</button></a></p>
                 </div>
               </div>
             </div>

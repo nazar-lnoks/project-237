@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from . import models
 from django.db.models import Avg, Max
-
+from django.conf import settings
+from django.core.mail import send_mail, EmailMessage
+from django.template.loader import render_to_string, get_template
 from django.contrib.contenttypes.models import ContentType
 
 from django.apps import apps
@@ -129,20 +131,22 @@ def getTopProducts():
 
 
 def generateHeaderContext(request):
-    account = get_object_or_404(ProfileUser, user=request.user)
-    orders_cart = models.CartProduct.objects.filter(user=request.user)
-    amount_cart = len(orders_cart)
-
-    totalPrice = 0
-    for i in orders_cart: totalPrice += i.price
 
     context = {}
     if not request.user.is_anonymous:
+        account = get_object_or_404(ProfileUser, user=request.user)
+        orders_cart = models.CartProduct.objects.filter(user=request.user)
+
+        amount_cart = 0
+        totalPrice = 0
+        for i in orders_cart:
+            amount_cart += i.count
+            totalPrice += i.price
         context = {
-                    'account':account,
-                    'amount_cart': amount_cart,
-                    'products_cart': orders_cart,
-                    'totalPrice': totalPrice
+            'account':account,
+            'amount_cart': amount_cart,
+            'products_cart': orders_cart,
+            'totalPrice': totalPrice
         }
 
     return context
@@ -160,24 +164,20 @@ def mainPage(request):
         query = request.POST.get('searchInput', 'notFound')
         if query != "" and query != "notFound":
             return redirect('/search/' + query)
-        
-        
 
     topProducts = getTopProducts()
-    categories = models.Category.objects.all()
+    # categories = models.Category.objects.all()
 
+    categories = getValidCategories()
+    for i in categories:
+        print(str(i.categoryObject.slug)+'------------------------------------------')
     emptyCategorys = False
     emptyTopProducts = False
     if len(topProducts) == 0: emptyTopProducts = True
     if len(categories) == 0: emptyCategorys = True
-    
-    context = {
-        'categories':categories, 
-        'topProducts':topProducts, 
-        'emptyCategorys':emptyCategorys, 
-        'emptyTopProducts':emptyTopProducts
-    }
 
+
+    context={'categories':categories, 'topProducts':topProducts, 'emptyCategorys':emptyCategorys, 'emptyTopProducts':emptyTopProducts}
     context = formContext(request, context)
     return render(request, 'shop/main_page.html', context)
 
@@ -208,10 +208,6 @@ def getProductDetails(request, slug):
 
         form = FeedbackForm(request.POST)
         if form.is_valid():
-
-            # print("---------------[" + request.POST.get('selected_rating') + "]-------------------------")
-            
-
             # get current use id
             id = request.user.id
             if id == None:
@@ -221,8 +217,6 @@ def getProductDetails(request, slug):
             comment = form.cleaned_data['comment']
             if not request.POST.get('selected_rating'): rate = 0
             else: rate = int(request.POST.get('selected_rating')) #form.cleaned_data['rate']
-
-            
 
             # get product with specified slug
             product = getProductBySlug(slug)
@@ -239,7 +233,7 @@ def getProductDetails(request, slug):
                                 contentObject=contentObject,
                                 comment=comment,
                                 rate=rate)
-
+            
             # calculate product average rate if there is at least 1 feedback
             if(len(productFeedbacks)>0):
                 product.averageRate=getProductAvarageRateBySlug(slug)
@@ -330,7 +324,7 @@ def addToCart(request, slug):
     if user.id == None:
         if DEBUG: print("addToCart() Anonymous user")
 
-        return redirect('/products/{}/'.format(str(slug)))
+        return HttpResponse('User is not authorized')
 
     product = getProductBySlug(slug)
     cartProduct = getCartProductByUserIdBySlug(user.id, slug)
@@ -414,16 +408,35 @@ def getOrderProduct(request, slug):
                                 deliveryAddress=deliveryAddress,
                                 payment=paymentMethod)
 
+            account = get_object_or_404(ProfileUser, user=request.user)
+
+            cartProducts = 0
+            obj = {
+                'product':product,
+                'cartProducts': cartProducts, 
+                'deliveryAddress': deliveryAddress,
+                'user': account,
+                'totalPrice': product.price
+            }
+
+            message = get_template('user/email_form.html').render(obj)
+            msg = EmailMessage('#techyRoom', message, settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+
+            msg.content_subtype = "html"
+            msg.send()
+
             if DEBUG: print("getOrderProduct() ordered")
 
-            return HttpResponse("Ordered")
+            return HttpResponseRedirect("/")
     else:
         form = OrderForm()
 
     context = {'form': form, 'product': product}
+
     context = formContext(request, context)
 
     if DEBUG: print("getOrderProduct() context: {}".format(form))
+
     return render(request, 'shop/order_page.html', context)
 
 
@@ -465,12 +478,43 @@ def getOrderCart(request):
                                         deliveryAddress=deliveryAddress,
                                         payment=paymentMethod)
 
+            cartProductsNotContent = []
+            account = get_object_or_404(ProfileUser, user=request.user)
+            totalPrice = 0
+
+            for i in cartProducts:
+                totalPrice += i.price
+                model = i.contentType.model_class()
+                product = model.objects.get(id=i.objectId)
+
+                order = {
+                    'product': product
+                }
+                cartProductsNotContent.append(order)
+            
+            obj = {
+                'products': cartProductsNotContent,
+                'cartProducts': cartProducts, 
+                'deliveryAddress': deliveryAddress,
+                'user': account,
+                'totalPrice': totalPrice
+            }
+
+            message = get_template('user/email_form.html').render(obj)
+            msg = EmailMessage('#techyRoom', message, settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+
+            msg.content_subtype = "html"
+            msg.send()
+
+            for cartProduct in cartProducts:
+                print(cartProduct)
+
             for cartProduct in cartProducts:
                 cartProduct.delete()
 
             if DEBUG: print("getOrderCart() ordered")
 
-            return HttpResponse("Ordered")
+            return HttpResponseRedirect("/")
     else:
         form = OrderForm()
 
@@ -481,6 +525,7 @@ def getOrderCart(request):
     context = {'form': form, 'cartProducts': cartProducts, 'summary': summary}
 
     if DEBUG: print("getOrderCart() context: {} cartProducts: {} summary: {}".format(form, cartProducts, summary))
+    context = formContext(request, context)
 
     return render(request, 'shop/ordercart_page.html', context)
 
@@ -555,7 +600,20 @@ def getTopProducts():
 
 
 def getAllProductsMetaData():
-    products = getAllProducts()
+    productClasses = []
+    for model in apps.get_app_config('shop').get_models():
+       if issubclass(model, models.Product) and model is not models.Product:
+           productClasses.append(model)
+
+    productQueries = []
+    for productClass in productClasses:
+        productQueries.append(productClass.objects.all())
+
+    products = []
+    for productQuery in productQueries:
+        for product in productQuery:
+            products.append(product)
+
 
     productsData = []
     for product in products:
@@ -603,6 +661,8 @@ def searchProducts(searchQuery):
                 foundProducts.append(productObject)
                 break
 
+    print(foundProducts)
+
     if len(foundProducts) > 0:
         return foundProducts
 
@@ -616,18 +676,16 @@ def getWantedProducts(request, query):
         if query != "" and query != "notFound":
             return redirect('/search/' + query)
 
+    print('Query: ' + str(query))
+
     products = searchProducts(query)
 
     context={
         'products': products
     }
 
-
-    getValidCategories()
-
     context = formContext(request, context)
     return render(request, 'shop/searchresult_page.html', context)
-
 
 
 def getAllProducts():
@@ -681,6 +739,7 @@ class ValidCategory:
         self.categoryObject = categoryObject
         self.image = image
 
+
 def getValidCategories():
 
     categoryCatalogs = getAllCategoryCatalogs()
@@ -693,7 +752,22 @@ def getValidCategories():
 
 
     return categories
-    
 
-    
-        
+
+
+def deleteCartProduct(request, id):
+    try:
+        cartProduct = models.CartProduct.objects.get(id=id)
+    except:
+        return HttpResponse('FATAL ERROR!')
+
+    cartProduct.delete()
+
+    return redirect(request.headers['Referer'][21::])
+
+
+def deleteProduct(request, slug):
+    product = getProductBySlug(slug)
+    product.delete()
+
+    return redirectToMainPage(request)
