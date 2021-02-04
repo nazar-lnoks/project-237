@@ -62,7 +62,7 @@
                   <div style="text-align: center;" class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
                     <a href="{% url 'getProductDetails_url' slug=order.contentObject.slug %}">
                       <img
-                        src="{{order.product.image.url}}"
+                        src="{{order.contentObject.image.url}}"
                         class="img-fluid"
                       />
                     </a>
@@ -79,6 +79,9 @@
             <p class="card-text">
               total price: {{totalPrice}}$
             </p>
+            <div style="width: 100%; display: flex; justify-content: center;">
+              <a href="{% url 'orderCart_url' %}" class="btn btn-primary">Buy cart</a>
+            </div>
           </ul>
         </li>
         <li class="nav-item dropdown me-3 me-lg-1">
@@ -97,6 +100,8 @@
               height="50"
               alt="Avatar"
               loading="lazy"
+              width="50px"
+              height="50px"
               />
             {% else %}
               <img

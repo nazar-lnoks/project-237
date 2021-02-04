@@ -421,9 +421,9 @@ def getOrderProduct(request, slug):
         form = OrderForm()
 
     context = {'form': form, 'product': product}
+    context = formContext(request, context)
 
     if DEBUG: print("getOrderProduct() context: {}".format(form))
-
     return render(request, 'shop/order_page.html', context)
 
 
@@ -555,20 +555,7 @@ def getTopProducts():
 
 
 def getAllProductsMetaData():
-    productClasses = []
-    for model in apps.get_app_config('shop').get_models():
-       if issubclass(model, models.Product) and model is not models.Product:
-           productClasses.append(model)
-
-    productQueries = []
-    for productClass in productClasses:
-        productQueries.append(productClass.objects.all())
-
-    products = []
-    for productQuery in productQueries:
-        for product in productQuery:
-            products.append(product)
-
+    products = getAllProducts()
 
     productsData = []
     for product in products:
@@ -616,8 +603,6 @@ def searchProducts(searchQuery):
                 foundProducts.append(productObject)
                 break
 
-    print(foundProducts)
-
     if len(foundProducts) > 0:
         return foundProducts
 
@@ -631,14 +616,84 @@ def getWantedProducts(request, query):
         if query != "" and query != "notFound":
             return redirect('/search/' + query)
 
-    print('Query: ' + str(query))
-
     products = searchProducts(query)
 
     context={
         'products': products
     }
 
+
+    getValidCategories()
+
     context = formContext(request, context)
     return render(request, 'shop/searchresult_page.html', context)
 
+
+
+def getAllProducts():
+    productClasses = []
+    for model in apps.get_app_config('shop').get_models():
+       if issubclass(model, models.Product) and model is not models.Product:
+           productClasses.append(model)
+
+    productQueries = []
+    for productClass in productClasses:
+        productQueries.append(productClass.objects.all())
+
+    products = []
+    for productQuery in productQueries:
+        for product in productQuery:
+            products.append(product)
+
+    return products
+
+
+def getAllCategories():
+    categories = list(models.Category.objects.all())
+
+    return categories
+
+
+def getAllCategoryCatalogs():
+    categories = getAllCategories()
+    products = getAllProducts()
+
+    categoryCatalogs = []
+
+    for category in categories:
+        categoryCatalogs.append([category, []])
+
+    # divide products by categories
+    for product in products:
+        for categoryCatalog in categoryCatalogs:
+            if categoryCatalog[0] == product.category:
+                categoryCatalog[1].append(product)
+                break
+
+    return categoryCatalogs
+
+
+class ValidCategory:
+    categoryObject = None
+    image = None
+
+    def __init__(self, categoryObject, image):
+        self.categoryObject = categoryObject
+        self.image = image
+
+def getValidCategories():
+
+    categoryCatalogs = getAllCategoryCatalogs()
+    categories = []
+
+    for categoryCatalog in categoryCatalogs:
+        if len(categoryCatalog[1]) > 0:
+            validCategory = ValidCategory(categoryCatalog[0], categoryCatalog[1][0].image)
+            categories.append(validCategory)
+
+
+    return categories
+    
+
+    
+        
