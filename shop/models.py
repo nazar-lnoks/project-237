@@ -78,7 +78,7 @@ class Product(models.Model):
 
 
 class Laptop(Product):
-    diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
+    diagonal = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')
     processor = models.CharField(max_length=255, verbose_name='Processor')
@@ -93,7 +93,7 @@ class Laptop(Product):
         return "{} {}".format(self.category.name, self.model)
 
 class Monitor(Product):
-    diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
+    diagonal = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     displayFrequency = models.PositiveIntegerField(verbose_name='Dispay frequency')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')
@@ -139,8 +139,9 @@ class Mouse(Product):
     def __str__(self):
         return "{}".format(self.sensorDpi)
 
+
 class Smartphone(Product):
-    diagonal = models.DecimalField(max_digits=2, decimal_places=1, verbose_name='Diagonal')
+    diagonal = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Diagonal')
     display = models.CharField(max_length=255, verbose_name='Display type')
     screenResolution = models.CharField(max_length=32, verbose_name='Screen resolution')
     processor = models.CharField(max_length=255, verbose_name='Processor')
@@ -152,6 +153,7 @@ class Smartphone(Product):
     def __str__(self):
         return "{} {}".format(self.storageCapacity, self.moistureProtection)
 
+
 class Camera(Product):
     type = models.CharField(max_length=128, verbose_name='Type')
     matrixSize = models.PositiveIntegerField(verbose_name='Matrix size')
@@ -159,6 +161,7 @@ class Camera(Product):
 
     def __str__(self):
         return "{} {}".format(self.type, self.megaPixels)
+
 
 class Smartwatch(Product):
     display = models.CharField(max_length=255, verbose_name='Display type')

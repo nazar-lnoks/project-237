@@ -5,217 +5,232 @@
 
 {% block content %}
 {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
-    <style>
+<style>
       
-        #categoryName {
-            margin-top: 2%;
+    #categoryName {
+        margin-top: 2%;
+    }
+
+    @media screen and (max-width: 576px) {
+
+        .parent {
+        width: 100%;
+            
+        top: 0;
+        left: 0;
+        overflow: auto;
+        white-space: nowrap;
+        text-align: center;
+        /* font-size: 0; */
         }
 
-        @media screen and (max-width: 576px) {
-
-            .parent {
-            width: 100%;
-                
-            top: 0;
-            left: 0;
-            overflow: auto;
-            white-space: nowrap;
-            text-align: center;
-            /* font-size: 0; */
+        .parent:before {
+        display: inline-block;
+        vertical-align: middle;
+        content: '';
             }
 
-            .parent:before {
-            display: inline-block;
-            vertical-align: middle;
-            content: '';
-                }
-
-            .product_card_block{
-            display: inline-block;
-            white-space: normal;
-            vertical-align: middle;
-            text-align: left;
-            }
-
+        .product_card_block{
+        display: inline-block;
+        white-space: normal;
+        vertical-align: middle;
+        text-align: left;
         }
 
+    }
+
+    .card_class{
+        width: 16rem;
+    }
+
+    .card_product_class{
+        width: 13rem;
+    }
+
+    button.btn.btn-danger.topProductsBtn {
+        font-size: 15px;
+    }
+
+    @media screen and (min-width: 576px) and (max-width: 768px)  {
         .card_class{
-            width: 16rem;
+            width: 9rem;
+        }
+        .card_product_class{
+            width: 8rem;
+            font-size: 12px;
+        }
+        button.btn.btn-danger.topProductsBtn {
+            font-size: 10px;
+        }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 992px)  {
+        .card_class{
+            width: 10rem;
         }
 
         .card_product_class{
+            width: 8rem;
+            font-size: 12px;
+        }
+        button.btn.btn-danger.topProductsBtn {
+            font-size: 10px;
+        }
+    }
+
+    @media screen and (min-width: 992px) {
+        .card_class{
             width: 13rem;
         }
 
+        .card_product_class{
+            width: 10rem;
+            font-size: 14px;
+        }
         button.btn.btn-danger.topProductsBtn {
+            font-size: 13px;
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+        .card_class{
+            width: 17rem;
+        }
+        
+        .card_product_class{
+            width: 14rem;
             font-size: 15px;
         }
+    }
 
-        @media screen and (min-width: 576px) and (max-width: 768px)  {
-            .card_class{
-                width: 9rem;
-            }
-            .card_product_class{
-                width: 8rem;
-                font-size: 12px;
-            }
-            button.btn.btn-danger.topProductsBtn {
-                font-size: 10px;
-            }
+    @media screen and (min-width: 768px) {
+        .product_card {
+            transition: .2s;
         }
 
-        @media screen and (min-width: 768px) and (max-width: 992px)  {
-            .card_class{
-                width: 10rem;
-            }
+        .product_card:hover{
+            transform:scale(1.05);
 
-            .card_product_class{
-                width: 8rem;
-                font-size: 12px;
-            }
-            button.btn.btn-danger.topProductsBtn {
-                font-size: 10px;
-            }
+        }
+        .content_box{
+            transition: .2s;
+        }
+        .product_card:hover .content_box{
+            box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2);
         }
 
-        @media screen and (min-width: 992px) {
-            .card_class{
-                width: 13rem;
-            }
-
-            .card_product_class{
-                width: 10rem;
-                font-size: 14px;
-            }
-            button.btn.btn-danger.topProductsBtn {
-                font-size: 13px;
-            }
+        button.btn.btn-danger.topProductsBtn {
+            transition: .2s;
         }
 
-        @media screen and (min-width: 1200px) {
-            .card_class{
-                width: 17rem;
-            }
-            
-            .card_product_class{
-                width: 14rem;
-                font-size: 15px;
-            }
+        button.btn.btn-danger.topProductsBtn:hover{
+            transform: scale(1.1);
         }
 
-        @media screen and (min-width: 768px) {
-            .product_card {
-                transition: .2s;
-            }
-
-            .product_card:hover{
-                transform:scale(1.05);
-
-            }
-            .content_box{
-                transition: .2s;
-            }
-            .product_card:hover .content_box{
-                box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2);
-            }
-
-            button.btn.btn-danger.topProductsBtn {
-                transition: .2s;
-            }
-
-            button.btn.btn-danger.topProductsBtn:hover{
-                transform: scale(1.1);
-            }
-
-            button.btn.btn-danger.topProductsBtn:active{
-                transform: scale(0.9);
-            }
-
-            .product_card_block_category{
-                transition: .2s;
-            }
-
-            .product_card_block_category:active{
-                transform: scale(0.95);
-            }
-            
+        button.btn.btn-danger.topProductsBtn:active{
+            transform: scale(0.9);
         }
-      
 
-    </style>
+        .product_card_block_category{
+            transition: .2s;
+        }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        .product_card_block_category:active{
+            transform: scale(0.95);
+        }
+        
+    }
 
-    <h3 class="text-center mt-4">Categories:</h3>
+    .product_details{
 
-    {% if emptyCategorys %}
-        <p>There is no categories</p>
-    {% endif %}
+        line-height: .4;
+    }
+  
 
-    <div class="container">
-        <div class="row">
-            {% for category in categories %}
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+<h3 class="text-center mt-4">Categories:</h3>
+
+{% if emptyCategorys %}
+    <p>There is no categories</p>
+{% endif %}
+
+<div class="container">
+    <div class="row">
+        {% for category in categories %}
 
 
-                <div class="col-md-3 col-sm-4 product_card" style="margin-top: 3%;">
-                        
-                    <div class="parent">
-                    <div class="product_card_block_category">
-                        <div class="card card_class">
-                            <a href="{% url 'getCategoryCatalog_url' slug=category.categoryObject.slug %}"><img src="{{ category.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a>
-                        
-                        <div class="card-body text-center content_box" style='padding:0;'>
-                            <h6 class="card-title">{{ category.categoryObject.name }}</h6>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-
-                
-
-            {% endfor %}
-        </div>
-    </div>
-
-    
-    <h3 class="text-center mt-5">Top Products:</h3>
-
-    {% if emptyTopProducts %}
-        <p>There is no products yet</p>
-    {% endif %}
-
-    <div class="container mb-5">
-        <div class="row">
-            {% for product in topProducts %}
-                
-
-                <div class="col-md-3 col-sm-4 product_card" style="margin-top: 3%;">
+            <div class="col-md-3 col-sm-4 product_card" style="margin-top: 3%;">
                     
-                    <div class="parent">
-                    <div class="product_card_block">
-                        <div class="card card_product_class">
-                        <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="imageLink"><img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a> <!-- style="height: 18rem;" -->
-                        
-                        <div class="card-body content_box">
-                            <h5 class="card-title">{{ product.model }}</h5>
-                            <p class="card-text" style="color:grey;">{{ product.description|truncatechars:40 }}</p>
-                            <p class="card-text">Rate: {{ product.averageRate|floatformat }}</p>
-                            
-                            <p class="text-center"><a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-danger topProductsBtn">Buy</button></a></p>
-                            
-                        </div>
-                        </div>
+                <div class="parent">
+                <div class="product_card_block_category product_card_block">
+                    <div class="card card_class">
+                        <a href="{% url 'getCategoryCatalog_url' slug=category.categoryObject.slug %}"><img src="{{ category.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a>
+                    
+                    <div class="card-body text-center content_box" style='padding:0;'>
+                        <h6 class="card-title">{{ category.categoryObject.name }}</h6>
                     </div>
                     </div>
                 </div>
+                </div>
+            </div>
 
-               
+            
 
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
-    
-    
+</div>
+
+
+<h3 class="text-center mt-5">Top Products:</h3>
+
+{% if emptyTopProducts %}
+    <p>There is no products yet</p>
+{% endif %}
+
+<div class="container mb-5">
+    <div class="row">
+        {% for product in topProducts %}
+            
+
+            <div class="col-md-3 col-sm-4 product_card" style="margin-top: 3%;">
+                
+                <div class="parent">
+                <div class="product_card_block">
+                    <div class="card card_product_class">
+                    <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="imageLink"><img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a> <!-- style="height: 18rem;" -->
+                    
+                    <div class="card-body content_box">
+                        <h5 class="card-title">{{ product.model }}</h5>
+                        <p class="card-text" style="color:grey;">{{ product.description|truncatechars:80 }}</p>
+
+                        <div class="product_details">
+                            <p class="card-text">Rate: {{ product.averageRate|floatformat:"0" }}</p>
+                            {% if product.availability %}
+                                <p>Available</p>
+                            {% else %}
+                                <p>Not available</p>
+                            {% endif %}
+                            <p class="card-text">{{ product.price|floatformat }}$</p>
+                        </div>
+                        
+                        {% if product.availability %}
+                            <p class="text-center mt-5" style="margin:0;"><a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-danger topProductsBtn">Buy</button></a></p>
+                        {% endif %}
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- <li><a href="{% url 'getProductDetails_url' slug=product.slug %}">{{ product.model }}</a></li> -->
+
+        {% endfor %}
+    </div>
+</div>
+
+
 
 {% endblock %}

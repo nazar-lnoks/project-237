@@ -46,7 +46,7 @@ class MouseAdmin(admin.ModelAdmin):
 class SmartphoneAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='smarphones'))
+            return ModelChoiceField(Category.objects.filter(slug='smartphones'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class CameraAdmin(admin.ModelAdmin):
@@ -58,7 +58,7 @@ class CameraAdmin(admin.ModelAdmin):
 class SmartwatchAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slug='smartwatch'))
+            return ModelChoiceField(Category.objects.filter(slug='smartwatches'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 

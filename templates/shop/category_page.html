@@ -6,7 +6,7 @@
 {% block content %}
 {% include 'user/interface_user.html' with user=account cart=amount_cart products=products_cart%}
 
-    <h1 align="center" id="categoryName">{{ category.name }}</h1>
+<h1 align="center" id="categoryName">{{ category.name }}</h1>
 
     {% if empty %}
       <p>There is no products yet</p>
@@ -136,6 +136,11 @@
             }
             
         }
+
+        .product_details{
+
+          line-height: .4;
+        }
       
     </style>
 
@@ -150,14 +155,24 @@
           <div class="parent">
             <div class="product_card_block">
               <div class="card card_class">
-                <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="imageLink"><img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a>
+                <a href="{% url 'getProductDetails_url' slug=product.slug %}" class="imageLink"><img src="{{ product.image.url }}.thumbnail.jpeg" class="card-img-top" alt="Product image"></a> <!-- style="height: 18rem;" -->
                 <div class="card-body content_box">
                   <h5 class="card-title">{{ product.model }}</h5>
-                  <p class="card-text" style="color:grey;">{{ product.description|truncatechars:40 }}</p>
-                  <p class="card-text">Rate: {{ product.averageRate|floatformat }}</p>
+                  <p class="card-text" style="color:grey;">{{ product.description|truncatechars:80 }}</p>
+                  
+                  <div class="product_details">
+                    <p class="card-text">Rate: {{ product.averageRate|floatformat:"0" }}</p>
+                    {% if product.availability %}
+                        <p>Available</p>
+                    {% else %}
+                        <p>Not available</p>
+                    {% endif %}
+                    <p class="card-text">{{ product.price|floatformat }}$</p>
+                  </div>
+                  {% if product.availability %}
+                    <p class="text-center mt-5" style="margin:0;"><a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-danger topProductsBtn">Buy</button></a></p>
+                  {% endif %}
 
-
-                  <p class="text-center"><a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-danger topProductsBtn">Buy</button></a></p>
                 </div>
               </div>
             </div>

@@ -100,15 +100,15 @@
 
         @media screen and (min-width: 768px) {
 
-            button.btn.btn-danger.topProductsBtn {
+            button.btn.btn-success.topProductsBtn {
                 transition: .2s;
             }
 
-            button.btn.btn-danger.topProductsBtn:hover{
+            button.btn.btn-success.topProductsBtn:hover{
                 transform: scale(1.1);
             }
 
-            button.btn.btn-danger.topProductsBtn:active{
+            button.btn.btn-success.topProductsBtn:active{
                 transform: scale(0.9);
             }
 
@@ -123,6 +123,57 @@
             button.btn.btn-success.topProductsBtn:active{
                 transform: scale(0.95);
             }
+
+
+            button.btn.btn-danger.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-danger.topProductsBtn:hover{
+                transform: scale(1.1);
+            }
+
+            button.btn.btn-danger.topProductsBtn:active{
+                transform: scale(0.9);
+            }
+
+            button.btn.btn-danger.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-danger.topProductsBtn:hover{
+                transform: scale(1.05);
+            }
+
+            button.btn.btn-danger.topProductsBtn:active{
+                transform: scale(0.95);
+            }
+
+
+            button.btn.btn-primary.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-primary.topProductsBtn:hover{
+                transform: scale(1.1);
+            }
+
+            button.btn.btn-primary.topProductsBtn:active{
+                transform: scale(0.9);
+            }
+
+            button.btn.btn-primary.topProductsBtn {
+                transition: .2s;
+            }
+
+            button.btn.btn-primary.topProductsBtn:hover{
+                transform: scale(1.05);
+            }
+
+            button.btn.btn-primary.topProductsBtn:active{
+                transform: scale(0.95);
+            }
+            
             
         }
 
@@ -182,17 +233,22 @@
                     <p><b>Desctiption: </b>{{product.description}}</p>
                     <p><b>Producer: </b>{{product.producer}}</p>
                     <p><b>Country: </b>{{product.producerCountry}}</p>
-                    <p><b>Availability: </b>{{product.availability}}</p>
+                    {% if product.availability %}
+                        <p><b>Availability: </b>Available</p>
+                    {% else %}
+                        <p><b>Availability: </b>Not available</p>
+                    {% endif %}
+                    </p>
                     <p><b>Average Rate: </b>{{product.averageRate}}</p>
                     <p><b>Price: </b>{{product.price|floatformat}}</p>
                     
-                    <div style="position: absolute;bottom:15;">
+                    <div>
                         {% if product.availability == True %}
                             <a href="{% url 'addProductToCart_url' slug=product.slug %}"><button type="button" class="btn btn-primary topProductsBtn">Add to cart</button></a>
                             <a href="{% url 'orderProduct_url' slug=product.slug %}"><button type="button" class="btn btn-success topProductsBtn">Buy</button></a>
                         {% endif %}
                         {% if request.user.is_staff %}
-                            <a href="{% url 'deleteProduct_url' slug=product.slug %}" class="btn btn-danger topProductsBtn">Delete</a>
+                            <a href="{% url 'deleteProduct_url' slug=product.slug %}"><button type="button" class="btn btn-danger topProductsBtn">Delete</button></a>
                         {% endif %}
                         
                     </div>
@@ -217,7 +273,7 @@
         </div>
     </div>
 
-    <div class="card col-sm-12 col-md-6 mt-5">
+    <div class="card col-sm-12 col-md-6 mt-5 page">
         <div class="card-body">
 
     <form method="post">
@@ -275,14 +331,14 @@
         
 
     {% if empty %}
-        <p>There is no comments yet</p>
+        <p class="page">There is no comments yet</p>
     {% endif %}
 
     {% for feedback in productFeedbacks %}
 
         <hr>
         
-        <div class="card col-sm-12 col-md-6">
+        <div class="card col-sm-12 col-md-6 page">
             <div class="card-body">
               <h5 class="card-title">{{ feedback.name }}</h5>
 

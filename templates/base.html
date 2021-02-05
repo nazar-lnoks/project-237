@@ -60,7 +60,7 @@
 
       <script>
         $( "body" ).scroll(function() {
-          $( "footer" ).css({'position': 'absolute', 'bottom': '0'});
+          $( "footer" ).css({ 'bottom': '0'});
         });
         
       </script>
@@ -68,7 +68,7 @@
       {% endblock %}
 
       <!-- Footer -->
-      <footer class="bg-light text-center text-lg-start fixed-bottom" style='float: bottom'>
+      <footer class="bg-light text-center text-lg-start " style='position:static;'>
           <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
             © 2020 Copyright:
             <a class="text-dark" href="{% url 'main_page_url' %}">TechyRoom</a>

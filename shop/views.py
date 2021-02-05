@@ -252,6 +252,8 @@ def getProductDetails(request, slug):
 
         fields = getProductMetaDataBySlug(slug)[1]
         
+        del fields[-1]
+
         context={
             'product':product, 
             'form':form, 
@@ -657,7 +659,7 @@ def searchProducts(searchQuery):
         productMeta = productMetaData[1]
 
         for field in productMeta:
-            if searchQuery in str(field[1]):
+            if searchQuery.lower() in str(field[1]).lower():
                 foundProducts.append(productObject)
                 break
 
